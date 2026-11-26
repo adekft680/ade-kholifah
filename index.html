@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DEADIUVAT — Ade Kholifah</title>
+  <link rel="icon" type="images/icon.png" href="logo.png">
+  <meta name="description" content="Portfolio Ade Kholifah: Video Editor, Graphic Designer, Web Developer.">
+  <!-- ============================================================
+       ISI KARYA DI SINI (tekan Ctrl+F lalu cari: DATA KARYA)
+       Foto/video karya taruh di folder images, lalu tulis namanya di bawah.
+       ============================================================ -->
+  <script>
+/* ==========================================================
+   DATA KARYA — edit file ini untuk mengganti karya sendiri.
+   cat   : video | graphic | web | photo
+   ratio : bentuk kotak karya, tulis 'lebar:tinggi'
+           contoh: '9:16' (vertikal), '4:3', '16:9', '6:3', '1:1'
+           (kosong = 4:3). Buat thumb dengan rasio yang sama
+           agar gambar tidak terpotong.
+   thumb : gambar kecil, contoh 'images/video1.jpg'
+           (kosong = tampil kotak merah placeholder)
+   url   : file .mp4/.webm/.jpg/.png -> dibuka di popup
+           atau link (YouTube, website) -> dibuka di tab baru
+           (kosong = tidak bisa diklik)
+   Tambah karya = salin satu baris { ... }, lalu ubah isinya.
+   ========================================================== */
+const WORKS = [
+  { cat: 'video',   ratio: '16:9', title: 'Editing Storytelling',   desc: 'vidio editing content storytelling sosial media', thumb: 'images/thumbnail1.jpeg', url: 'images/vidio2.mp4' },
+  { cat: 'video',   ratio: '9:16', title: 'Editing vidio running',   desc: 'vidio editing running content', thumb: 'images/thumbnail2.png', url: 'images/vidio running.mp4' },
+  { cat: 'video',   ratio: '16:9', title: 'Editing Vidio Edukasi',   desc: 'Vidio edukasi content sosial media', thumb: 'images/thumbnail_v3.png', url: 'images/vidio3.mp4' },
+  { cat: 'graphic', ratio: '9:16', title: 'Judul Desain 1',  desc: 'Deskripsi singkat karya.', thumb: 'images/desain3.png', url: 'images/desain3.png' },
+  { cat: 'graphic', ratio: '3:4',  title: 'Judul Desain 2',  desc: 'Deskripsi singkat karya.', thumb: 'images/desain1.jpg', url: 'images/desain1.jpg' },
+  { cat: 'graphic', ratio: '16:9',  title: 'Judul Desain 3',  desc: 'Deskripsi singkat karya.', thumb: 'images/desain2.png', url: 'images/desain2.png' },
+  { cat: 'web',     ratio: '16:9', title: 'Website 1', desc: 'website portfolio deadiuvat', thumb: 'images/web1.png', url: '' },
+  { cat: 'web',     ratio: '16:9', title: 'Judul Website 2', desc: 'Deskripsi singkat karya.', thumb: '', url: '' },
+   { cat:'photo',   ratio: '3:4',  title: 'Foto Produk',    desc: 'Foto produk sabun sombong.', thumb: 'images/foto produk.png', url: 'images/foto produk.png' },
+  { cat: 'photo',   ratio: '9:16', title: 'Foto 1',    desc: 'Low angle foto.', thumb: 'images/photo1.jpg', url: 'images/photo1.jpg' },
+  { cat: 'photo',   ratio: '4:3',  title: 'Foto 2',    desc: 'Panning photo', thumb: 'images/foto2.JPG', url: 'images/foto2.JPG' },
+  { cat: 'photo',   ratio: '16:9', title: 'Foto 3',    desc: 'sunset photography', thumb: 'images/foto4.jpg', url: 'images/foto4.jpg' }
+];
+  </script>
+
+  <!-- STYLE (tampilan) -->
+  <style>
+/* ===== 1. VARIABEL (ubah warna & font di sini) ===== */
+:root{
+  --bg:#050505; --red:#E50914; --text:#fff;
+  --display:Impact,Haettenschweiler,"Arial Narrow Bold","sans-serif-condensed",sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.has-cursor *{cursor:none}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;min-height:100svh}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+/* ===== 2. NAVIGASI ===== */
+.nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;justify-content:space-between;align-items:center;
+  padding:calc(1rem + env(safe-area-inset-top)) clamp(1rem,4vw,3.5rem) 1rem}
+.nav__brand{font-family:var(--display);font-size:1.4rem;letter-spacing:.06em}
+.nav__links{display:flex;gap:.4rem;padding:.35rem;border:1px solid rgba(229,9,20,.6);border-radius:99px;
+  background:rgba(5,5,5,.55);backdrop-filter:blur(10px)}
+.nav__links a{padding:.5rem 1.1rem;border-radius:99px;font-size:.78rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;transition:background .3s,color .3s}
+.nav__links a:hover{background:var(--red)}
+.nav__toggle{display:none;width:44px;height:44px;position:relative}
+.nav__toggle span{position:absolute;left:10px;right:10px;height:2px;background:#fff;transition:transform .4s var(--ease)}
+.nav__toggle span:first-child{top:18px}.nav__toggle span:last-child{top:26px}
+.nav.is-open .nav__toggle span:first-child{transform:translateY(4px) rotate(45deg)}
+.nav.is-open .nav__toggle span:last-child{transform:translateY(-4px) rotate(-45deg)}
+
+/* ===== 3. HERO ===== */
+.hero{position:relative;height:100svh;min-height:640px;overflow:hidden}
+.hero__glow{position:absolute;inset:-10%;pointer-events:none;
+  background:radial-gradient(38% 48% at 50% 58%,rgba(229,9,20,.6),transparent 70%),
+             radial-gradient(28% 38% at 88% 8%,rgba(229,9,20,.32),transparent 70%),
+             radial-gradient(30% 40% at 6% 92%,rgba(229,9,20,.22),transparent 70%);
+  filter:blur(28px);translate:calc(var(--mx,0)*-18px) calc(var(--my,0)*-12px);animation:pulse 6s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,#050505 100%)}
+.hero__title{position:absolute;top:11%;left:0;right:0;z-index:1;text-align:center;font-family:var(--display);font-weight:400;
+  font-size:clamp(4rem,19vw,20rem);line-height:.9;letter-spacing:.01em;
+  background:linear-gradient(180deg,#ff2d2d 5%,#a30008 70%,#4a0004);-webkit-background-clip:text;background-clip:text;color:transparent;
+  translate:calc(var(--mx,0)*10px) calc(var(--my,0)*6px)}
+.hero__photo{position:absolute;bottom:0;left:0;right:0;margin-inline:auto;width:fit-content;height:80%;z-index:2;
+  translate:calc(var(--mx,0)*-12px) calc(var(--my,0)*-8px);
+  filter:drop-shadow(0 0 38px rgba(229,9,20,.4));
+  /* Mask: bawah memudar + sisi kiri/kanan memudar halus (ubah 16% / 84% untuk lebih lebar/sempit) */
+  -webkit-mask-image:linear-gradient(#000 82%,transparent),linear-gradient(90deg,transparent,rgba(0,0,0,.4) 6%,#000 16%,#000 84%,rgba(0,0,0,.4) 94%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(#000 82%,transparent),linear-gradient(90deg,transparent,rgba(0,0,0,.4) 6%,#000 16%,#000 84%,rgba(0,0,0,.4) 94%,transparent);
+  mask-composite:intersect}
+.hero__photo img{height:100%;width:auto;max-width:none}
+.hero__left,.hero__right{position:absolute;z-index:3}
+.hero__left{left:clamp(1rem,4vw,3.5rem);bottom:12%}
+.hero__hello{font-family:Georgia,serif;font-style:italic;font-size:clamp(1rem,1.8vw,1.5rem);color:#ff8b8b}
+.hero__name{font-family:var(--display);font-weight:400;font-size:clamp(2.6rem,7vw,6.5rem);line-height:.92;overflow:hidden;padding-bottom:.06em}
+.hero__roles{margin-top:1rem;max-width:22rem;font-size:.78rem;font-weight:700;letter-spacing:.14em;line-height:1.7;color:var(--red)}
+.hero__right{right:clamp(1rem,4vw,3.5rem);bottom:12%;max-width:19rem;text-align:right}
+.hero__brand{font-family:var(--display);font-size:clamp(2rem,4.5vw,4rem);letter-spacing:.03em}
+.hero__desc{margin:.7rem 0 1.4rem;font-size:.92rem;line-height:1.6;color:rgba(255,255,255,.78)}
+.btn{display:inline-block;padding:.9rem 2rem;background:var(--red);font-weight:700;font-size:.82rem;letter-spacing:.18em;
+  text-transform:uppercase;border-radius:2px;box-shadow:0 0 30px rgba(229,9,20,.45);transition:transform .3s var(--ease),box-shadow .3s}
+.btn:hover{box-shadow:0 0 50px rgba(229,9,20,.8)}
+.char{display:inline-block}
+
+/* Tombol skip + progress bar + kursor */
+.skip{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom));z-index:60;padding:.6rem 1.1rem;font-size:.75rem;
+  letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(255,255,255,.35);border-radius:99px;
+  background:rgba(0,0,0,.5);transition:opacity .5s,background .3s}
+.skip:hover{background:var(--red)}
+body.intro-done .skip{opacity:0;pointer-events:none}
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:70;background:var(--red);transform-origin:left;transform:scaleX(0)}
+body.intro-play:not(.intro-done) .progress{animation:bar 6.6s linear forwards}
+body.intro-done .progress{opacity:0;transition:opacity .6s}
+.cursor{position:fixed;left:0;top:0;z-index:100;width:12px;height:12px;border-radius:50%;background:var(--red);
+  pointer-events:none;opacity:0;transition:width .25s,height .25s,background .25s,opacity .3s}
+.cursor.is-on{opacity:1}
+.cursor.is-hover{width:52px;height:52px;background:rgba(229,9,20,.22);border:1px solid var(--red)}
+
+/* ===== 4. TIMELINE INTRO (hanya aktif saat body.intro-play) ===== */
+body.intro-play .hero__glow{animation:glowIn 1.2s ease both,pulse 6s ease-in-out 1.2s infinite alternate}
+body.intro-play .hero__title{animation:titleIn 2s var(--ease) .7s both}                       /* 0.7s: PORTFOLIO */
+body.intro-play .char{animation:charIn 1s var(--ease) calc(2.6s + var(--i)*.07s) both}       /* 2.6s: nama */
+body.intro-play .hero__roles{animation:fadeUp 1s var(--ease) 3.9s both}                      /* 3.9s: subtitle */
+body.intro-play .hero__photo{animation:photoIn 2s var(--ease) 4.4s both}                     /* 4.4s: foto */
+/* Elemen ".late" muncul setelah intro selesai (class intro-done) */
+.late{transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
+body.intro-play:not(.intro-done) .late{opacity:0;transform:translateY(18px);pointer-events:none}
+body.intro-skip *{animation:none!important}
+
+@keyframes glowIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{from{opacity:.75}to{opacity:1}}
+@keyframes titleIn{from{opacity:0;transform:scale(.35);filter:blur(26px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes charIn{from{opacity:0;transform:translateY(110%)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes photoIn{from{opacity:0;transform:scale(1.2);filter:brightness(.15) blur(8px) drop-shadow(0 0 38px rgba(229,9,20,.4))}
+                   to{opacity:1;transform:none;filter:brightness(1) blur(0) drop-shadow(0 0 38px rgba(229,9,20,.4))}}
+@keyframes bar{to{transform:scaleX(1)}}
+
+/* ===== 5. RESPONSIVE ===== */
+@media (max-width:820px){
+  .nav__toggle{display:block}
+  .nav__links{position:fixed;inset:0;flex-direction:column;justify-content:center;align-items:center;gap:1rem;border:0;border-radius:0;
+    background:rgba(5,5,5,.96);opacity:0;pointer-events:none;transition:opacity .4s}
+  .nav__links a{font-size:1.6rem;font-family:var(--display);font-weight:400}
+  .nav.is-open .nav__links{opacity:1;pointer-events:auto}
+  .nav__toggle{z-index:2}
+  .hero{height:auto;min-height:100svh;display:flex;flex-direction:column;align-items:center;padding-top:5.5rem}
+  .hero__title{position:relative;top:auto;font-size:21vw}
+  .hero__photo{position:relative;height:46svh;margin-top:-5vw}
+  .hero__left,.hero__right{position:relative;inset:auto;text-align:center;padding:0 1.25rem;max-width:30rem}
+  .hero__left{margin-top:-2rem}
+  .hero__roles{max-width:none}
+  .hero__right{margin:1.4rem 0 3.5rem}
+}
+
+/* ===== 6. HORMATI PENGGUNA YANG MEMATIKAN ANIMASI ===== */
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+
+/* ===== 7. BAGIAN UMUM (judul + scroll reveal) ===== */
+.sec{padding:clamp(5rem,12vw,9rem) clamp(1rem,4vw,3.5rem)}
+.sec-title{font-family:var(--display);font-weight:400;font-size:clamp(2.8rem,8vw,5.5rem);line-height:1;margin-bottom:2rem}
+.sec-title::after{content:"";display:block;height:4px;width:0;margin-top:.6rem;background:var(--red);box-shadow:0 0 18px var(--red);transition:width 1.2s var(--ease) .3s}
+.sec-title.in::after{width:min(100%,26rem)}
+.js .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1s var(--ease) var(--d,0s)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* ===== 8. ABOUT ME ===== */
+.about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(1.5rem,5vw,5rem);align-items:center;
+  background:radial-gradient(60% 70% at 100% 40%,rgba(229,9,20,.35),transparent 70%)}
+.about__photo{position:relative;overflow:hidden;aspect-ratio:4/5;border-radius:4px;box-shadow:0 0 60px rgba(229,9,20,.25)}
+.about__photo img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover;translate:0 calc(var(--py,0)*7%)}
+.about__photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(5,5,5,.75))}
+.about__lead{max-width:38rem;font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.75;color:rgba(255,255,255,.86)}
+.chip{display:inline-block;margin-top:1.2rem;padding:.4rem .9rem;border:1px solid rgba(229,9,20,.6);border-radius:99px;font-size:.8rem}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:1.2rem;margin:2rem 0;list-style:none}
+.skills li{padding-top:.8rem;border-top:2px solid var(--red)}
+.skills strong{display:block;font-family:var(--display);font-weight:400;font-size:1.35rem;margin-bottom:.3rem}
+.skills span{font-size:.85rem;line-height:1.5;color:rgba(255,255,255,.7)}
+.journey{list-style:none;display:grid;gap:1rem;padding-left:1.4rem;border-left:2px solid rgba(229,9,20,.5)}
+.journey li{position:relative;line-height:1.5}
+.journey li::before{content:"";position:absolute;left:-1.78rem;top:.45rem;width:11px;height:11px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red)}
+
+/* ===== 9. PORTFOLIO ===== */
+.portfolio{background:linear-gradient(180deg,transparent,rgba(110,0,6,.5) 55%,transparent)}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.filters button{padding:.65rem 1.1rem;border:1px solid rgba(255,255,255,.25);border-radius:99px;font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:background .3s,border-color .3s}
+.filters button:hover,.filters button[aria-selected=true]{background:var(--red);border-color:var(--red)}
+/* Galeri masonry: tinggi tiap karya mengikuti rasio (field ratio di js/works.js) */
+.grid{columns:2;column-gap:.8rem}
+.work{position:relative;display:block;width:100%;margin-bottom:.8rem;break-inside:avoid;overflow:hidden;border-radius:4px;text-align:left;background:#111;animation:fadeUp .8s var(--ease) calc(var(--i)*.06s) both}
+.work__img{position:absolute;inset:0;background:radial-gradient(80% 80% at 30% 20%,rgba(229,9,20,.5),#0a0a0a) center/cover;transition:transform .8s var(--ease),filter .5s}
+/* Judul karya: lebih naik (padding bawah), muncul dengan fade-in saat hover */
+.work__info{position:absolute;inset:auto 0 0;display:grid;gap:.25rem;padding:3rem 1rem 1.6rem;background:linear-gradient(transparent,rgba(0,0,0,.9));opacity:0;transition:opacity .7s ease}
+.work__info small{font-size:.7rem;font-weight:700;letter-spacing:.1em;color:var(--red)}
+.work__info strong{font-family:var(--display);font-weight:400;font-size:1.3rem}
+.work__info em{font-style:normal;font-size:.8rem;color:rgba(255,255,255,.75)}
+.work:hover .work__img,.work:focus-visible .work__img{transform:scale(1.08);filter:brightness(.8)}
+.work:hover .work__info,.work:focus-visible .work__info{opacity:1}
+@media (hover:none){.work__info{opacity:1}} /* HP: selalu terlihat */
+.lightbox{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:1rem;background:rgba(0,0,0,.93);backdrop-filter:blur(8px)}
+.lightbox[hidden]{display:none}
+.lightbox__body{display:grid;gap:.8rem;max-width:min(92vw,1000px);text-align:center}
+.lightbox__body img,.lightbox__body video{max-width:100%;max-height:72svh;margin:auto;border-radius:4px}
+.lightbox__x{position:absolute;top:calc(.8rem + env(safe-area-inset-top));right:1rem;width:44px;height:44px;font-size:2rem}
+
+/* ===== 10. CONTACT ===== */
+.contact{background:radial-gradient(70% 60% at 20% 100%,rgba(229,9,20,.4),transparent 70%)}
+.contact__wrap{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(1.5rem,5vw,4rem)}
+.contact__photo{width:clamp(150px,22vw,240px);aspect-ratio:1;border-radius:50%;object-fit:cover;border:3px solid var(--red);box-shadow:0 0 50px rgba(229,9,20,.5)}
+.contact__list{flex:1;min-width:min(100%,260px);display:grid;list-style:none}
+.contact__list a{display:flex;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:clamp(1rem,2vw,1.25rem);overflow-wrap:anywhere;transition:color .3s,padding-left .4s var(--ease),border-color .3s}
+.contact__list a:hover{padding-left:.8rem;color:var(--red);border-color:var(--red)}
+.contact__list svg{flex:none;width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.foot{padding:1.5rem 1rem calc(1.5rem + env(safe-area-inset-bottom));text-align:center;font-size:.8rem;color:rgba(255,255,255,.5);border-top:1px solid rgba(255,255,255,.1)}
+
+@media (min-width:700px){.grid{columns:3}}
+@media (min-width:1100px){.grid{columns:4}}
+@media (max-width:820px){.about{grid-template-columns:1fr}.about__photo{aspect-ratio:1}}
+  </style>
+</head>
+<!-- "intro-play" = animasi intro aktif. JS akan mengatur class ini. -->
+<body class="intro-play">
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"></div>
+
+  <!-- NAVIGASI -->
+  <header class="nav late">
+    <a class="nav__brand" href="#home">DEADIUVAT</a>
+    <button class="nav__toggle" aria-label="Buka menu" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav__links">
+      <a href="#home">Home</a>
+      <a href="#about">About Me</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO: sekaligus tempat intro berlangsung -->
+    <section class="hero" id="home">
+      <div class="hero__glow"></div>
+      <h2 class="hero__title">PORTFOLIO</h2>
+
+      <figure class="hero__photo">
+        <!-- Ganti foto: timpa file images/profile.png -->
+        <img src="images/profile.png" alt="Foto Ade Kholifah" fetchpriority="high">
+      </figure>
+
+      <div class="hero__left">
+        <p class="hero__hello late">Hello, I'm</p>
+        <h1 class="hero__name" data-split>ADE KHOLIFAH</h1>
+        <p class="hero__roles">VIDEO EDITOR — GRAPHIC DESIGNER — WEB DEVELOPER</p>
+      </div>
+
+      <div class="hero__right late" style="--d:.3s">
+        <p class="hero__brand">DEADIUVAT</p>
+        <p class="hero__desc">Saya berkarya lewat video, desain, dan kode untuk mengubah ide menjadi pengalaman visual yang berkesan.</p>
+        <a class="btn magnetic" href="#portfolio">Lihat Karya</a>
+      </div>
+    </section>
+
+    <!-- ABOUT ME -->
+    <section class="sec about" id="about">
+      <figure class="about__photo reveal">
+        <img src="images/about.jpg" alt="Ade Kholifah di tepi sungai" loading="lazy">
+      </figure>
+      <div>
+        <h2 class="sec-title reveal">About Me</h2>
+        <p class="about__lead reveal">Saya Ade Kholifah, kreator digital yang senang berkarya lewat video, desain, dan website. Saya selalu ingin berkembang, dan saat ini saya punya satu ambisi: mencapai 1M pertama sebelum umur 25 tahun melalui media digital.</p>
+        <span class="chip reveal">Kulon Progo, Yogyakarta</span>
+        <ul class="skills reveal">
+          <li><strong>Video Editing</strong><span>Memotong cerita jadi tontonan yang hidup.</span></li>
+          <li><strong>Graphic Design</strong><span>Visual yang mudah diingat.</span></li>
+          <li><strong>Web Development</strong><span>Website yang rapi dan cepat.</span></li>
+        </ul>
+        <!-- Perjalanan: ubah teksnya sesuai ceritamu -->
+        <ol class="journey reveal">
+          <li>Mulai berkarya dari hobi di dunia digital.</li>
+          <li>Belajar edit video, desain grafis, dan pemrograman web.</li>
+          <li>Membangun brand DEADIUVAT.</li>
+          <li>Target: 1M pertama sebelum umur 25.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO: isi karya diatur di js/works.js -->
+    <section class="sec portfolio" id="portfolio">
+      <h2 class="sec-title reveal">Portfolio</h2>
+      <div class="filters reveal" id="filters">
+        <button type="button" data-f="all" aria-selected="true">Semua</button>
+        <button type="button" data-f="video" aria-selected="false">Video Editing</button>
+        <button type="button" data-f="graphic" aria-selected="false">Graphic Design</button>
+        <button type="button" data-f="web" aria-selected="false">Web Development</button>
+        <button type="button" data-f="photo" aria-selected="false">Photography</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <!-- CONTACT ME -->
+    <section class="sec contact" id="contact">
+      <h2 class="sec-title reveal">Contact Me</h2>
+      <div class="contact__wrap">
+        <img class="contact__photo reveal" src="images/contact.jpg" alt="Ade Kholifah" loading="lazy">
+        <ul class="contact__list reveal">
+          <li><a href="https://instagram.com/Deeadiuvat" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>@Deeadiuvat</a></li>
+          <li><a href="https://tiktok.com/@adefatona" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v11a4 4 0 1 1-4-4M14 3c.4 2.4 2 4 5 4"/></svg>@adefatona</a></li>
+          <!-- WhatsApp: ganti 62XXXXXXXXXXX dengan nomormu (format 62, tanpa 0 & tanpa +) -->
+          <li><a href="https://wa.me/62882005275029" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.5L3 21z"/><path d="M9 9c0 3 3 6 6 6l1-1.5-2-1-1 .7c-1-.4-1.8-1.2-2.2-2.2l.7-1-1-2L9 9z"/></svg>Chat via WhatsApp</a></li>
+          <li><a href="mailto:adekholifatonatiyas13@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>adekholifatonatiyas13@gmail.com</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer class="foot">© 2026 DEADIUVAT — Ade Kholifah</footer>
+
+  <!-- Popup untuk melihat karya -->
+  <div class="lightbox" id="lb" hidden>
+    <button class="lightbox__x" id="lbx" aria-label="Tutup">×</button>
+    <div class="lightbox__body" id="lbb"></div>
+  </div>
+
+  <button class="skip" id="skip">Skip Intro</button>
+  <!-- SCRIPT (animasi & galeri) -->
+  <script>
+(() => {
+  'use strict';
+  const body = document.body;
+  const hero = document.querySelector('.hero');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches; // mouse/trackpad (desktop)
+  const INTRO_MS = 6600; // durasi intro (ms). Samakan dengan animasi "bar" di CSS.
+
+  /* 1. Pecah teks [data-split] jadi huruf-huruf untuk animasi staggered */
+  document.querySelectorAll('[data-split]').forEach(el => {
+    const text = el.textContent.trim();
+    el.setAttribute('aria-label', text);
+    el.textContent = '';
+    [...text].forEach((ch, i) => {
+      const s = document.createElement('span');
+      s.className = 'char';
+      s.textContent = ch === ' ' ? '\u00A0' : ch;
+      s.style.setProperty('--i', i);
+      s.setAttribute('aria-hidden', 'true');
+      el.appendChild(s);
+    });
+  });
+
+  /* 2. Kontrol intro: hanya sekali per sesi, bisa di-skip */
+  let seen = false;
+  try { seen = sessionStorage.getItem('deadiuvat-intro') === '1'; } catch (e) {}
+  let timer;
+  const finish = skipped => {
+    clearTimeout(timer);
+    body.classList.add('intro-done');
+    if (skipped) body.classList.add('intro-skip');
+    try { sessionStorage.setItem('deadiuvat-intro', '1'); } catch (e) {}
+  };
+  if (reduce || seen) { body.classList.remove('intro-play'); finish(true); }
+  else { timer = setTimeout(() => finish(false), INTRO_MS); }
+  document.getElementById('skip').addEventListener('click', () => finish(true));
+
+  /* 3. Menu mobile */
+  const nav = document.querySelector('.nav');
+  const toggle = document.querySelector('.nav__toggle');
+  const setMenu = open => {
+    nav.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', open);
+  };
+  toggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+  nav.querySelectorAll('.nav__links a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+  /* 4. Khusus desktop: custom cursor, parallax, tombol magnetik */
+  if (fine && !reduce) {
+    const cur = document.querySelector('.cursor');
+    let tx = 0, ty = 0, x = 0, y = 0;
+    document.documentElement.classList.add('has-cursor');
+
+    addEventListener('pointermove', e => {
+      tx = e.clientX; ty = e.clientY;
+      cur.classList.add('is-on');
+      hero.style.setProperty('--mx', (e.clientX / innerWidth - .5).toFixed(3));
+      hero.style.setProperty('--my', (e.clientY / innerHeight - .5).toFixed(3));
+    });
+    (function loop() {
+      x += (tx - x) * .18; y += (ty - y) * .18;
+      cur.style.transform = `translate3d(${x}px,${y}px,0) translate(-50%,-50%)`;
+      requestAnimationFrame(loop);
+    })();
+
+    document.addEventListener('pointerover', e =>
+      cur.classList.toggle('is-hover', !!e.target.closest('a,button')));
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .3}px,${(e.clientY - r.top - r.height / 2) * .4}px)`;
+      });
+      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+    });
+  }
+
+  /* 5. Scroll reveal: elemen .reveal muncul saat masuk layar */
+  document.documentElement.classList.add('js');
+  const io = new IntersectionObserver(list => list.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* 6. Parallax ringan foto About */
+  const aboutPhoto = document.querySelector('.about__photo');
+  if (!reduce) addEventListener('scroll', () => requestAnimationFrame(() => {
+    const r = aboutPhoto.getBoundingClientRect();
+    const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; // -1..1
+    aboutPhoto.style.setProperty('--py', Math.max(-1, Math.min(1, p)).toFixed(3));
+  }), { passive: true });
+
+  /* 7. Galeri portfolio (data dari js/works.js) */
+  const LABEL = { video: 'Video Editing', graphic: 'Graphic Design', web: 'Web Development', photo: 'Photography' };
+  const grid = document.getElementById('grid');
+  const lb = document.getElementById('lb'), lbb = document.getElementById('lbb');
+  const closeLb = () => { lb.hidden = true; lbb.innerHTML = ''; };
+  const openWork = w => {
+    if (!w.url) return;
+    if (/\.(mp4|webm)$/i.test(w.url)) lbb.innerHTML = `<video src="${w.url}" controls autoplay playsinline></video>`;
+    else if (/\.(jpe?g|png|webp|gif)$/i.test(w.url)) lbb.innerHTML = `<img src="${w.url}" alt="${w.title}">`;
+    else return window.open(w.url, '_blank', 'noopener');
+    lbb.insertAdjacentHTML('beforeend', `<p><strong>${w.title}</strong><br>${w.desc}</p>`);
+    lb.hidden = false;
+  };
+  const render = f => {
+    grid.innerHTML = '';
+    WORKS.filter(w => f === 'all' || w.cat === f).forEach((w, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'work'; b.style.setProperty('--i', i);
+      const m = /^(\d+(?:\.\d+)?):(\d+(?:\.\d+)?)$/.exec(w.ratio || '');
+      b.style.aspectRatio = m ? `${m[1]} / ${m[2]}` : '4 / 3'; // rasio karya, default 4:3
+      b.innerHTML = `<span class="work__img"${w.thumb ? ` style="background-image:url('${w.thumb}')"` : ''}></span>` +
+        `<span class="work__info"><small>${LABEL[w.cat]}</small><strong>${w.title}</strong><em>${w.desc}</em></span>`;
+      b.addEventListener('click', () => openWork(w));
+      grid.appendChild(b);
+    });
+  };
+  document.getElementById('filters').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-selected', x === b));
+    render(b.dataset.f);
+  });
+  document.getElementById('lbx').addEventListener('click', closeLb);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+  render('all');
+})();
+  </script>
+</body>
+</html>
